@@ -1,0 +1,9 @@
+<section>
+  <h1>Your recipes with your ingredients:</h1>
+</section>
+
+<section>
+  <% @recipes.each do |recipe| %>
+    <%= render recipe %>
+  <% end %>
+</section>

@@ -1,0 +1,15 @@
+<section>
+  <h1>Pennylane Recipes</h1>
+  <p>Easy recipes using ingredients you already have in the kitchen.</p>
+</section>
+
+<section>
+  <hr>
+  <div>
+    <%= form_for @recipe, url: recipes_path, method: :get do |form| %>
+      <%= form.label :ingredients, "Search for ingredients:" %>
+      <%= form.text_field :ingredients, multiple: true %>
+      <%= form.submit "Search" %>
+    <% end %>
+  </div>
+</section>

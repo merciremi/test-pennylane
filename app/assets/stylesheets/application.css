@@ -13,3 +13,17 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+  font-family: system-ui;
+  width: 90vw;
+  margin: auto;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 36px;
+}

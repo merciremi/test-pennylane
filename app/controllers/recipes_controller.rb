@@ -1,6 +1,6 @@
 class RecipesController < ApplicationController
   def index
-    @recipes = Recipe.where(":ingredients = ANY (ingredients)", ingredients: 'bread').limit(10)
+    @recipes = Recipe.search_by_ingredients(recipe_params[:ingredients])
   end
 
   def show

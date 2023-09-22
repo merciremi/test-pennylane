@@ -1,6 +1,6 @@
 class RecipesController < ApplicationController
   def index
-    @recipes = Recipe.search_by_ingredients(recipe_params[:ingredients])
+    @recipes = Recipe.search_by_ingredients(recipe_params[:ingredients]).page(params[:page]).per(10)
   end
 
   def show

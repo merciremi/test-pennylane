@@ -1,6 +1,8 @@
 <section>
   <h1><%= @recipe.title %></h1>
+  <hr>
   <p><%= @recipe.author%></p>
+  <p><%= @recipe.rating%></p>
   <ul>
     <% @recipe.ingredients.each do |ingredient| %>
       <li><%= ingredient %></li>

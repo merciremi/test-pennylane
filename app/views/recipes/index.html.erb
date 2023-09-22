@@ -1,9 +1,11 @@
 <section>
   <h1>Your recipes with your ingredients:</h1>
+  <hr>
 </section>
 
 <section>
   <% @recipes.each do |recipe| %>
     <%= render recipe %>
   <% end %>
+  <%= paginate @recipes %>
 </section>

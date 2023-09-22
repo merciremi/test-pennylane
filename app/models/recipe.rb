@@ -1,7 +1,7 @@
 class Recipe < ApplicationRecord
   include PgSearch::Model
 
-  pg_search_scope :search_by_ingredients, against: :ingredients
+  pg_search_scope :search_by_ingredients, against: :ingredients, ranked_by: '(recipes.rating)'
 end
 
 # == Schema Information

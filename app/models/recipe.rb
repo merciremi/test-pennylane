@@ -2,6 +2,8 @@ class Recipe < ApplicationRecord
   include PgSearch::Model
 
   pg_search_scope :search_by_ingredients, against: :ingredients, ranked_by: '(recipes.rating)'
+
+  validates :title, :author, presence: true
 end
 
 # == Schema Information

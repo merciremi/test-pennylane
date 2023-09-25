@@ -28,3 +28,7 @@ h1 {
 h2 {
   font-size: 36px;
 }
+
+#recipe img {
+  max-width: 10vw;
+}

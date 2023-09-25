@@ -1,11 +1,15 @@
 <section>
-  <h1>Your recipes with your ingredients:</h1>
+  <h1>Our best recipes with <%= @ingredients.join %></h1>
   <hr>
 </section>
 
 <section>
-  <% @recipes.each do |recipe| %>
-    <%= render recipe %>
-  <% end %>
-  <%= paginate @recipes %>
+  <div>
+    <% @recipes.each do |recipe| %>
+      <%= render recipe %>
+    <% end %>
+  </div>
+  <div>
+    <%= paginate @recipes %>
+  </div>
 </section>

@@ -1,11 +1,15 @@
-<section>
+<section id='recipe'>
   <h1><%= @recipe.title %></h1>
   <hr>
-  <p><%= @recipe.author%></p>
-  <p><%= @recipe.rating%></p>
+  <div>
+    <%= image_tag @recipe.image %>
+  </div>
+  <p>Rating: <strong><%= @recipe.rating%></strong></p>
+  <p>Recipe prep time: <strong><%= @recipe.prep_time%>min</strong> | Recipe cook time: <strong><%= @recipe.cook_time%>min</strong></p>
   <ul>
     <% @recipe.ingredients.each do |ingredient| %>
       <li><%= ingredient %></li>
     <% end %>
   </ul>
+  <p><i><%= @recipe.author%></i></p>
 </section>

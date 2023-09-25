@@ -1,2 +1,5 @@
 <h2><%= recipe.title %></h2>
-<p><%= link_to "Recipe", recipe_path(recipe) %></p>
+<p>
+  Rating: <strong><%= recipe.rating %></strong> |
+  <%= link_to "Read recipe", recipe_path(recipe) %>
+</p>

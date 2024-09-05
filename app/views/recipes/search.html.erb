@@ -16,16 +16,16 @@
 <hr>
 
 <section>
-  <% if !@fallback && @normalized_ingredients.present? %>
-    <h2>Our best recipes with <%= @normalized_ingredients %></h2>
+  <% if !@fallback_collection && @normalized_ingredients.present? %>
+    <h2>Our best recipes with <%= @normalized_ingredients.join(', ') %></h2>
   <% elsif %>
-    <h2>No recipes matched your ingredients</h2>
-    <p>Here are a list of recipes with some of your ingredients to inspire you.</p>
+    <h2>No recipes matched all your ingredients</h2>
+    <h3>Here is a list of recipes with some of your ingredients to inspire you.</h3>
     <%  if @normalized_ingredients.present? %>
       <div>
         <p>
           You can also search for:
-          <% @normalized_ingredients.split(',').each do |ingredient| %>
+          <% @normalized_ingredients.each do |ingredient| %>
             <span><a href="<%= search_recipes_path(recipe: { ingredients: [ingredient] }) %>"><%= ingredient %></a></span>
           <% end %>
         </p>

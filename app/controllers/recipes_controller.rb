@@ -1,12 +1,11 @@
 class RecipesController < ApplicationController
+  include IngredientsNormalizer
+
   # GET /search
   def search
-    query = RecipesQuery.call(ingredients)
+    query = RecipesQuery.call(normalized_ingredients)
 
-    session[:normalized_ingredients] = query.normalized_ingredients
-
-    @fallback = query.fallback
-
+    @fallback_collection = query.fallback_collection
     @recipes = query.recipes.page(params[:page]).per(10)
   end
 
@@ -19,6 +18,10 @@ class RecipesController < ApplicationController
 
   def ingredients
     @ingredients ||= recipe_params[:ingredients].compact_blank
+  end
+
+  def normalized_ingredients
+    @normalized_ingredients ||= normalize(ingredients)
   end
 
   def recipe_params

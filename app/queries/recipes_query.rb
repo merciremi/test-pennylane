@@ -15,26 +15,21 @@ class RecipesQuery
   INGREDIENTS_WEIGHT = 0.9
   RATING_WEIGHT = 0.1
 
-  attr_reader :context, :ingredients, :normalized_ingredients, :recipes, :fallback
+  attr_reader :context, :ingredients, :recipes, :fallback_collection
 
   def initialize(context = Recipe, ingredients)
     @context = context
-    @ingredients = ingredients
-    @normalized_ingredients = set_normalized_ingredients
+    @ingredients = ingredients.join(',')
+
+    @fallback_collection = false
   end
 
   def self.call(...) = new(...).call
 
-  # Documentation by Remi - 4 Sep 2024
-  #
-  # TODO:
-  # [ ] Add vectorized columns for ingredients and title
-  # [ ] Add index on vectorized columns
-  # [ ] Handle fuzzy matching
   def call
     @recipes ||= begin
       context
-        .where("#{ingredients_query} OR #{title_query}", normalized_ingredients, normalized_ingredients)
+        .where("searchable @@ #{query_vector}", ingredients)
         .order(Arel.sql("#{rank} desc"))
     end
 
@@ -48,49 +43,23 @@ class RecipesQuery
   def rank
     @rank ||= begin
       <<~RANK
-        (#{INGREDIENTS_WEIGHT} * ts_rank(#{ingredients_vector}, websearch_to_tsquery('english', '#{normalized_ingredients}'))) +
+        (#{INGREDIENTS_WEIGHT} * ts_rank(searchable, websearch_to_tsquery('english', '#{ingredients}'))) +
         (#{RATING_WEIGHT} * rating)
       RANK
     end
   end
 
-  def ingredients_query
-    "setweight(#{ingredients_vector}, 'A') @@ #{query_vector}"
-  end
-
-  def title_query
-    "setweight(#{title_vector}, 'B') @@ #{query_vector}"
-  end
-
-  def ingredients_vector
-    "to_tsvector('english', COALESCE(ingredients::text, ''))"
-  end
-
-  def title_vector
-    "to_tsvector('english', COALESCE(title::text, ''))"
-  end
-
-  def query_vector
-    "websearch_to_tsquery('english', ?)"
-  end
-
-  def set_normalized_ingredients
-    return [] if ingredients.empty?
-
-    ingredients
-      .join(' ')
-      .split(/[\s+ | ,+ | ;+ | :+]/)
-      .reject(&:empty?)
-      .join(',')
+  def query_vector(type: :websearch)
+    "#{type.to_s}_to_tsquery('english', ?)"
   end
 
   def fallback_collections
-    @fallback = true
+    @fallback_collection = true
 
     if ingredients.present?
-      or_ingredients = normalized_ingredients.presence.gsub(',', ' OR ')
+      or_ingredients = ingredients.presence.gsub(',', ' OR ')
 
-      context.where("#{ingredients_query} OR #{title_query}", or_ingredients, or_ingredients).order(rating: :desc).limit(10)
+      context.where("searchable @@ #{query_vector}", or_ingredients).order(rating: :desc).limit(10)
     else
       context.all.order(rating: :desc).limit(10)
     end
@@ -102,7 +71,7 @@ class RecipesQuery
   # As of now, I keep it here as a reminder.
   def _rank_with_extra_sanitation
     @rank ||= begin
-      ActiveRecord::Base.sanitize_sql_array([<<~RANK, normalized_ingredients])
+      ActiveRecord::Base.sanitize_sql_array([<<~RANK, ingredients])
         (#{INGREDIENTS_WEIGHT} * ts_rank(#{ingredients_vector}, websearch_to_tsquery('english', ?))) +
         (#{RATING_WEIGHT} * rating)
       RANK

@@ -12,8 +12,8 @@ RSpec.describe RecipesController, type: :request do
     it { expect(response.body).to include('Vampire Burger') }
   end
 
-  describe 'GET /recipes' do
-    subject(:action) { get '/recipes', params: params }
+  describe 'GET /recipes/search' do
+    subject(:action) { get '/recipes/search', params: params }
 
     let!(:recipe) do
       Recipe.create(
@@ -59,21 +59,34 @@ RSpec.describe RecipesController, type: :request do
       it 'returns recipes which use all ingredients', :aggregate_failures do
         action
 
-        expect(response).to be_successful
         expect(response.body).to include('Vampire Burger')
-        expect(response.body).to include('Chocolate cookies')
         expect(response.body).to_not include('Foccaccia')
       end
-    end
 
-    context 'when the user does not input ingredients' do
-      let(:ingredients) { [] }
-
-      it 'returns all recipes' do
+      it 'return an :ok response' do
         action
 
         expect(response).to be_successful
-        expect(response.body).to include('Vampire Burger', 'Chocolate cookies', 'Foccaccia')
+      end
+    end
+
+    # We can replicate the logic of these tests in a test dedicated to the query onject
+    # and keep these as a kind of acceptance test.
+    context 'when the user does not input ingredients' do
+      let(:ingredients) { [] }
+
+      it 'returns an :ok response' do
+        action
+
+        expect(response).to be_successful
+      end
+
+      it 'returns all recipes', :aggregate_failures do
+        action
+
+        expect(response.body).to include('Vampire Burger')
+        expect(response.body).to include('Foccaccia')
+        expect(response.body).to include('Chocolate cookies')
       end
     end
   end

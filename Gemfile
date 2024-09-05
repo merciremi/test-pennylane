@@ -67,6 +67,9 @@ group :development do
   gem 'rspec-rails'
   gem 'rubocop', require: false
   gem 'web-console'
+  gem 'pry-byebug'
+  gem 'benchmark-ips'
+
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -79,6 +82,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'pry-byebug'
 end
 
 gem "dockerfile-rails", ">= 1.5", :group => :development

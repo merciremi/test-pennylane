@@ -6,3 +6,23 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+require 'json'
+
+data_path = File.join(Rails.root, 'lib', 'data', 'recipes-en.json')
+serialized_recipes = File.read(data_path)
+recipes = JSON.parse(serialized_recipes)
+
+recipes_payload = recipes.map do |recipe|
+  {
+    title: recipe['title'],
+    author: recipe['author'],
+    image: recipe['image'],
+    prep_time: recipe['prep_time'],
+    cook_time: recipe['cook_time'],
+    rating: recipe['ratings'],
+    ingredients: recipe['ingredients']
+  }
+end
+
+Recipe.insert_all(recipes_payload)

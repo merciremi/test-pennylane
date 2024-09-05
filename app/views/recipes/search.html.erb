@@ -1,0 +1,46 @@
+<section>
+  <h1><a href="/">Pennylane Recipes</a></h1>
+  <p>Easy recipes using ingredients you already have in the kitchen.</p>
+</section>
+
+<section>
+  <div>
+    <%= form_for Recipe.new, url: search_recipes_path, method: :get do |form| %>
+      <%= form.label :ingredients, "Search for ingredients:" %>
+      <%= form.text_field :ingredients, multiple: true %>
+      <%= form.submit "Search" %>
+    <% end %>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <% if !@fallback && @normalized_ingredients.present? %>
+    <h2>Our best recipes with <%= @normalized_ingredients %></h2>
+  <% elsif %>
+    <h2>No recipes matched your ingredients</h2>
+    <p>Here are a list of recipes with some of your ingredients to inspire you.</p>
+    <%  if @normalized_ingredients.present? %>
+      <div>
+        <p>
+          You can also search for:
+          <% @normalized_ingredients.split(',').each do |ingredient| %>
+            <span><a href="<%= search_recipes_path(recipe: { ingredients: [ingredient] }) %>"><%= ingredient %></a></span>
+          <% end %>
+        </p>
+      </div>
+    <% end %>
+  <% end %>
+</section>
+
+<section>
+  <div>
+    <% @recipes.each do |recipe| %>
+      <%= render recipe %>
+    <% end %>
+  </div>
+  <div>
+    <%= paginate @recipes %>
+  </div>
+</section>

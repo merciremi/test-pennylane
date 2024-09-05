@@ -4,9 +4,8 @@
 </section>
 
 <section>
-  <hr>
   <div>
-    <%= form_for @recipe, url: recipes_path, method: :get do |form| %>
+    <%= form_for @recipe, url: search_recipes_path, method: :get do |form| %>
       <%= form.label :ingredients, "Search for ingredients:" %>
       <%= form.text_field :ingredients, multiple: true %>
       <%= form.submit "Search" %>

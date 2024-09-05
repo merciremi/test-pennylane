@@ -1,9 +1,13 @@
 class RecipesController < ApplicationController
-  before_action :set_ingredients, only: :index
+  # GET /search
+  def search
+    query = RecipesQuery.call(ingredients)
 
-  # GET /recipes
-  def index
-    @recipes = RecipesQuery.call(@ingredients).page(params[:page]).per(10)
+    session[:normalized_ingredients] = query.normalized_ingredients
+
+    @fallback = query.fallback
+
+    @recipes = query.recipes.page(params[:page]).per(10)
   end
 
   # GET /recipes/:id
@@ -13,9 +17,8 @@ class RecipesController < ApplicationController
 
   private
 
-  def set_ingredients
-    # Fetch ingredients and remove empty string when user inputs nothing
-    @ingredients = recipe_params[:ingredients].compact_blank
+  def ingredients
+    @ingredients ||= recipe_params[:ingredients].compact_blank
   end
 
   def recipe_params

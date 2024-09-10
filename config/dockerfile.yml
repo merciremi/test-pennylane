@@ -5,5 +5,7 @@ options:
   bin-cd: true
   label:
     fly_launch_runtime: rails
+  postgresql: true
+  prepare: false
   sentry: true
   swap: 1024M
